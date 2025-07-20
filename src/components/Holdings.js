@@ -9,7 +9,7 @@ const Holdings = () => {
   useEffect(() => {
     const fetchHoldings = async () => {
       try {
-        const response = await axios.get("https://zerodha-backend-woad.vercel.app/holdings"); // Update with your deployed backend URL
+        const response = await axios.get("https://zerodhabackend-lb15.onrender.com/holdings"); // Update with your deployed backend URL
         setAllHoldings(response.data.data); // Adjusted to match the new response structure
       } catch (err) {
         setError("Failed to fetch holdings data");
