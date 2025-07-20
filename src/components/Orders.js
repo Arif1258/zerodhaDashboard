@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Orders = () => {
   return (
@@ -6,9 +7,9 @@ const Orders = () => {
       <div className="no-orders">
         <p>You haven't placed any orders today</p>
 
-        <a href="https://zerodhabackend-lb15.onrender.com/api/orders" className="btn">
+        <Link to={"/"} className="btn">
           Get started
-        </a>
+        </Link>
       </div>
     </div>
   );
