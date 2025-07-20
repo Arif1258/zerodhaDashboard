@@ -10,6 +10,11 @@ const Orders = () => {
         <Link to={"/"} className="btn">
           Get started
         </Link>
+        
+        {/* Link to see orders from the backend */}
+        <a href="https://zerodhabackend-lb15.onrender.com/api/orders" className="btn" target="_blank" rel="noopener noreferrer">
+          See My Orders
+        </a>
       </div>
     </div>
   );
