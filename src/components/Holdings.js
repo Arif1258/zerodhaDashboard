@@ -9,11 +9,11 @@ const Holdings = () => {
   useEffect(() => {
     const fetchHoldings = async () => {
       try {
-        const response = await axios.get("https://zerodhabackend-lb15.onrender.com/holdings"); // Update with your deployed backend URL
-        setAllHoldings(response.data.data); // Adjusted to match the new response structure
+        const response = await axios.get("https://zerodhabackend-lb15.onrender.com/api/holdings"); // Ensure the correct endpoint
+        setAllHoldings(response.data.data);
       } catch (err) {
         setError("Failed to fetch holdings data");
-        console.error(err);
+        console.error("Error fetching holdings data:", err);
       }
     };
 
@@ -33,11 +33,16 @@ const Holdings = () => {
     ],
   };
 
+  const totalInvestment = allHoldings.reduce((acc, stock) => acc + stock.avg * stock.qty, 0);
+  const currentValue = allHoldings.reduce((acc, stock) => acc + stock.price * stock.qty, 0);
+  const profitLoss = currentValue - totalInvestment;
+  const percentageChange = totalInvestment > 0 ? (profitLoss / totalInvestment * 100).toFixed(2) : 0;
+
   return (
     <>
       <h3 className="title">Holdings ({allHoldings.length})</h3>
 
-      {error && <p className="error">{error}</p>} {/* Display error message if any */}
+      {error && <p className="error">{error}</p>}
 
       <div className="order-table">
         <table>
@@ -58,7 +63,7 @@ const Holdings = () => {
               const curValue = stock.price * stock.qty;
               const isProfit = curValue - stock.avg * stock.qty >= 0.0;
               const profClass = isProfit ? "profit" : "loss";
-              const dayClass = stock.isLoss ? "loss" : "profit";
+              const dayClass = stock.isLoss ? "loss" : "profit"; // Ensure stock.isLoss is defined
 
               return (
                 <tr key={index}>
@@ -81,28 +86,16 @@ const Holdings = () => {
 
       <div className="row">
         <div className="col">
-          <h5>
-            {allHoldings.reduce((acc, stock) => acc + stock.avg * stock.qty, 0).toFixed(2)} {/* Total investment */}
-            <span> </span>
-          </h5>
+          <h5>{totalInvestment.toFixed(2)}</h5>
           <p>Total investment</p>
         </div>
         <div className="col">
-          <h5>
-            {allHoldings.reduce((acc, stock) => acc + stock.price * stock.qty, 0).toFixed(2)} {/* Current value */}
-            <span> </span>
-          </h5>
+          <h5>{currentValue.toFixed(2)}</h5>
           <p>Current value</p>
         </div>
         <div className="col">
           <h5>
-            {(
-              allHoldings.reduce((acc, stock) => acc + (stock.price * stock.qty - stock.avg * stock.qty), 0)
-            ).toFixed(2)} {/* P&L */}
-            <span> (+{(
-              (allHoldings.reduce((acc, stock) => acc + (stock.price * stock.qty - stock.avg * stock.qty), 0) /
-              allHoldings.reduce((acc, stock) => acc + (stock.avg * stock.qty), 0) * 100
-            ).toFixed(2))}%)</span>
+            {profitLoss.toFixed(2)} <span>(+{percentageChange}%)</span>
           </h5>
           <p>P&L</p>
         </div>
